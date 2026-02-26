@@ -118,10 +118,16 @@ graph TD
         LB["lilbrotr"]
         YB["yourbrotr"]
     end
-    subgraph SVC["Services (Extensible)"]
-        S1["Seeder"] --- S2["Finder"] --- S3["Validator"]
-        S4["Monitor"] --- S5["Refresher"] --- S6["Synchronizer"]
-        S7["+ API"] --- S8["+ DVM"] --- S9["+ Relay"]
+    subgraph SVC["Services (Independent)"]
+        S1["Seeder"]
+        S2["Finder"]
+        S3["Validator"]
+        S4["Monitor"]
+        S5["Refresher"]
+        S6["Synchronizer"]
+        S7["+ API"]
+        S8["+ DVM"]
+        S9["+ Relay"]
     end
     subgraph CORE["Core"]
         C1["Pool"] --- C2["Brotr"] --- C3["BaseService"]
@@ -268,7 +274,7 @@ Cursor-based event collection with per-relay sync state.
 
 <v-clicks>
 
-- **25 stored procedures** — no raw SQL in app code
+- **25 stored functions** — no raw SQL mutations in app code
 - **11 materialized views** — pre-computed analytics
 - **Cascade functions** — atomic multi-table inserts
 - **Content-addressed** — SHA-256 deduplication
@@ -427,7 +433,7 @@ docker build --build-arg DEPLOYMENT=lilbrotr -t lilbrotr .
 <div class="p-4 bg-violet-900/20 rounded-lg text-center">
 
 ### Web of Trust
-Store signals for NIP-85 trust assertions. Follow graphs, endorsements, zaps.
+Collect signals for NIP-85 trust assertions: follow graphs, endorsements, zaps.
 
 </div>
 
@@ -472,7 +478,7 @@ Build trust scoring systems on top of collected social graph data.
 
 # Web of Trust Infrastructure
 
-BigBrotr stores the signals — **you define trust**.
+BigBrotr collects the raw social signals — **you build trust on top**.
 
 <div class="grid grid-cols-2 gap-8 mt-4">
 
@@ -541,12 +547,11 @@ BigBrotr stores the signals — **you define trust**.
 
 - **6** independent services
 - **5** packages in diamond DAG
-- **25** stored procedures
+- **25** stored functions
 - **11** materialized views
 - **6** tables
 - **4** network types
-- **2,400+** unit tests
-- **90+** integration tests
+- **2,400+** tests (unit + integration)
 - **80%+** branch coverage
 
 </v-clicks>
