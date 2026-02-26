@@ -3,7 +3,7 @@ import './App.css'
 
 function App() {
   const [current, setCurrent] = useState(0)
-  const total = 13
+  const total = 15
 
   const next = useCallback(() => setCurrent(p => (p + 1) % total), [total])
   const prev = useCallback(() => setCurrent(p => (p - 1 + total) % total), [total])
@@ -23,7 +23,7 @@ function App() {
         return (
           <div className="slide center">
             <h1>BigBrotr</h1>
-            <p className="subtitle">Infrastructure for Nostr Intelligence</p>
+            <p className="subtitle">Network Intelligence for Nostr</p>
             <div className="tags">
               <span className="tag">Open Source</span>
               <span className="tag">MIT License</span>
@@ -43,7 +43,7 @@ function App() {
             <h2>The Challenge</h2>
             <ul>
               <li>Events scattered across <span className="highlight">hundreds of independent relays</span></li>
-              <li>Each relay is <span className="highlight">ephemeral</span> - can disappear anytime</li>
+              <li>Each relay is <span className="highlight">ephemeral</span> — can disappear anytime</li>
               <li>No single entity sees the <span className="highlight">whole picture</span></li>
               <li>Unreplicated events are <span className="highlight">lost forever</span></li>
             </ul>
@@ -75,7 +75,43 @@ function App() {
             </div>
           </div>
         )
-      case 4: // Architecture
+      case 4: // Diamond DAG
+        return (
+          <div className="slide">
+            <h2>Architecture: Diamond DAG</h2>
+            <h3>Five packages, one rule: imports only flow downward</h3>
+            <div className="architecture">
+{`              services           Orchestration
+             /   |   \\
+          core  nips  utils      Infrastructure
+             \\   |   /
+              models             Pure domain types`}
+            </div>
+            <div className="dag-descriptions">
+              <div className="dag-item">
+                <span className="dag-name">models</span>
+                <span className="dag-desc">Frozen dataclasses, zero I/O, fail-fast validation</span>
+              </div>
+              <div className="dag-item">
+                <span className="dag-name">core</span>
+                <span className="dag-desc">Pool, Brotr (DB facade), BaseService, Logger, Metrics</span>
+              </div>
+              <div className="dag-item">
+                <span className="dag-name">nips</span>
+                <span className="dag-desc">NIP-11 relay info, NIP-66 health monitoring (6 tests)</span>
+              </div>
+              <div className="dag-item">
+                <span className="dag-name">utils</span>
+                <span className="dag-desc">DNS, Nostr keys, WebSocket/HTTP transport, SOCKS5</span>
+              </div>
+              <div className="dag-item">
+                <span className="dag-name">services</span>
+                <span className="dag-desc">Six independent services sharing PostgreSQL</span>
+              </div>
+            </div>
+          </div>
+        )
+      case 5: // Customizable Layer Architecture
         return (
           <div className="slide">
             <h2>Customizable Layer Architecture</h2>
@@ -93,12 +129,13 @@ function App() {
                 </p>
               </div>
               <div className="layer">
-                <div className="layer-title">SERVICES (Extensible)</div>
+                <div className="layer-title">SERVICES (Independent)</div>
                 <div className="layer-content">
                   <span className="layer-item core">Seeder</span>
                   <span className="layer-item core">Finder</span>
                   <span className="layer-item core">Validator</span>
                   <span className="layer-item core">Monitor</span>
+                  <span className="layer-item core">Refresher</span>
                   <span className="layer-item core">Synchronizer</span>
                   <span className="layer-item extensible">+ API</span>
                   <span className="layer-item extensible">+ DVM</span>
@@ -113,27 +150,28 @@ function App() {
                   <span className="layer-item core">Brotr</span>
                   <span className="layer-item core">BaseService</span>
                   <span className="layer-item core">Logger</span>
+                  <span className="layer-item core">Metrics</span>
                 </div>
               </div>
             </div>
           </div>
         )
-      case 5: // Pipeline
+      case 6: // Six Independent Services
         return (
           <div className="slide">
-            <h2>Independent Services</h2>
-            <h3>All services run independently, connected through the database</h3>
+            <h2>Six Independent Services</h2>
+            <h3>All connected only through the database — no queues, no inter-service APIs</h3>
             <div className="services-flow">
               <div className="services-column">
                 <div className="service-card discovery">
                   <div className="service-name">Seeder</div>
-                  <div className="service-file">seeder.py</div>
+                  <div className="service-mode">one-shot</div>
                   <div className="service-desc">Load relay URLs from seed files</div>
                 </div>
                 <div className="service-card discovery">
                   <div className="service-name">Finder</div>
-                  <div className="service-file">finder.py</div>
-                  <div className="service-desc">Discover from APIs & NIP-65</div>
+                  <div className="service-mode">continuous</div>
+                  <div className="service-desc">Discover from APIs & NIP-65 events</div>
                 </div>
                 <div className="services-label">Discovery</div>
               </div>
@@ -144,8 +182,8 @@ function App() {
               <div className="services-column">
                 <div className="service-card validation">
                   <div className="service-name">Validator</div>
-                  <div className="service-file">validator.py</div>
-                  <div className="service-desc">Test WebSocket + Tor connectivity</div>
+                  <div className="service-mode">continuous</div>
+                  <div className="service-desc">WebSocket handshake + Nostr verify</div>
                 </div>
                 <div className="services-label">Validation</div>
               </div>
@@ -156,26 +194,31 @@ function App() {
               <div className="services-column">
                 <div className="service-card operation">
                   <div className="service-name">Monitor</div>
-                  <div className="service-file">monitor.py</div>
-                  <div className="service-desc">NIP-11 & NIP-66 health data</div>
+                  <div className="service-mode">continuous</div>
+                  <div className="service-desc">NIP-11 & NIP-66 health checks</div>
+                </div>
+                <div className="service-card operation">
+                  <div className="service-name">Refresher</div>
+                  <div className="service-mode">scheduled</div>
+                  <div className="service-desc">Materialized view refresh</div>
                 </div>
                 <div className="service-card operation">
                   <div className="service-name">Synchronizer</div>
-                  <div className="service-file">synchronizer.py</div>
-                  <div className="service-desc">Multi-process event sync</div>
+                  <div className="service-mode">continuous</div>
+                  <div className="service-desc">Cursor-based event collection</div>
                 </div>
                 <div className="services-label">Operation</div>
               </div>
             </div>
           </div>
         )
-      case 6: // Data Model - Database Schema
+      case 7: // Database Schema
         return (
           <div className="slide">
             <h2>Database Schema</h2>
             <div className="db-schema-horizontal">
               <div className="db-table">
-                <div className="db-table-header">events</div>
+                <div className="db-table-header">event</div>
                 <div className="db-table-body">
                   <div className="db-column pk">id <span>BYTEA PK</span></div>
                   <div className="db-column">pubkey <span>BYTEA</span></div>
@@ -189,7 +232,7 @@ function App() {
               </div>
 
               <div className="db-table junction">
-                <div className="db-table-header">events_relays</div>
+                <div className="db-table-header">event_relay</div>
                 <div className="db-table-body">
                   <div className="db-column fk">event_id <span>BYTEA FK</span></div>
                   <div className="db-column fk">relay_url <span>TEXT FK</span></div>
@@ -198,7 +241,7 @@ function App() {
               </div>
 
               <div className="db-table">
-                <div className="db-table-header">relays</div>
+                <div className="db-table-header">relay</div>
                 <div className="db-table-body">
                   <div className="db-column pk">url <span>TEXT PK</span></div>
                   <div className="db-column">network <span>TEXT</span></div>
@@ -210,9 +253,9 @@ function App() {
                 <div className="db-table-header">relay_metadata</div>
                 <div className="db-table-body">
                   <div className="db-column fk">relay_url <span>TEXT FK</span></div>
-                  <div className="db-column">generated_at <span>BIGINT</span></div>
-                  <div className="db-column">type <span>TEXT</span></div>
                   <div className="db-column fk">metadata_id <span>BYTEA FK</span></div>
+                  <div className="db-column fk">metadata_type <span>TEXT FK</span></div>
+                  <div className="db-column">generated_at <span>BIGINT</span></div>
                 </div>
               </div>
 
@@ -220,18 +263,19 @@ function App() {
                 <div className="db-table-header">metadata</div>
                 <div className="db-table-body">
                   <div className="db-column pk">id <span>BYTEA PK</span></div>
+                  <div className="db-column pk">metadata_type <span>TEXT PK</span></div>
                   <div className="db-column">data <span>JSONB</span></div>
                 </div>
-                <div className="db-table-note">Content-addressed</div>
+                <div className="db-table-note">Content-addressed (SHA-256)</div>
               </div>
 
               <div className="db-table">
-                <div className="db-table-header">service_data</div>
+                <div className="db-table-header">service_state</div>
                 <div className="db-table-body">
                   <div className="db-column pk">service_name <span>TEXT PK</span></div>
-                  <div className="db-column pk">data_type <span>TEXT PK</span></div>
-                  <div className="db-column pk">data_key <span>TEXT PK</span></div>
-                  <div className="db-column">data <span>JSONB</span></div>
+                  <div className="db-column pk">state_type <span>TEXT PK</span></div>
+                  <div className="db-column pk">state_key <span>TEXT PK</span></div>
+                  <div className="db-column">state_value <span>JSONB</span></div>
                   <div className="db-column">updated_at <span>BIGINT</span></div>
                 </div>
               </div>
@@ -244,7 +288,72 @@ function App() {
             </div>
           </div>
         )
-      case 7: // Use Cases
+      case 8: // NIP Implementations
+        return (
+          <div className="slide">
+            <h2>NIP Implementations</h2>
+            <div className="grid-2">
+              <div className="box">
+                <h3>NIP-11: Relay Information</h3>
+                <p className="box-subtitle">Fetches relay metadata via HTTP</p>
+                <ul className="compact">
+                  <li>Relay name, description, contact</li>
+                  <li>Software name and version</li>
+                  <li>Supported NIPs list</li>
+                  <li>Rate limits and policies</li>
+                  <li>Payment information</li>
+                </ul>
+              </div>
+              <div className="box">
+                <h3>NIP-66: Relay Monitoring</h3>
+                <p className="box-subtitle">Six independent health tests</p>
+                <div className="nip66-grid">
+                  <div className="nip66-test"><span className="nip66-name">RTT</span><span className="nip66-desc">WebSocket round-trip time</span></div>
+                  <div className="nip66-test"><span className="nip66-name">SSL</span><span className="nip66-desc">Certificate validity</span></div>
+                  <div className="nip66-test"><span className="nip66-name">DNS</span><span className="nip66-desc">Resolution time, IPs</span></div>
+                  <div className="nip66-test"><span className="nip66-name">Geo</span><span className="nip66-desc">Country, city, ASN</span></div>
+                  <div className="nip66-test"><span className="nip66-name">Net</span><span className="nip66-desc">AS number, ISP</span></div>
+                  <div className="nip66-test"><span className="nip66-name">HTTP</span><span className="nip66-desc">Status, headers</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      case 9: // Network Support
+        return (
+          <div className="slide">
+            <h2>Network Support</h2>
+            <h3>Four network types, each with independent configuration</h3>
+            <div className="network-grid">
+              <div className="network-card clearnet">
+                <div className="network-icon">🌐</div>
+                <h4>Clearnet</h4>
+                <code>wss://</code>
+                <p>Direct connection</p>
+              </div>
+              <div className="network-card tor">
+                <div className="network-icon">🧅</div>
+                <h4>Tor</h4>
+                <code>.onion</code>
+                <p>SOCKS5 proxy</p>
+              </div>
+              <div className="network-card i2p">
+                <div className="network-icon">🔒</div>
+                <h4>I2P</h4>
+                <code>.b32.i2p</code>
+                <p>SOCKS5 proxy</p>
+              </div>
+              <div className="network-card lokinet">
+                <div className="network-icon">🛡️</div>
+                <h4>Lokinet</h4>
+                <code>.loki</code>
+                <p>SOCKS5 proxy</p>
+              </div>
+            </div>
+            <p className="network-note">Per-network timeout, concurrency, and proxy settings via Pydantic configuration models</p>
+          </div>
+        )
+      case 10: // Use Cases
         return (
           <div className="slide">
             <h2>Use Cases</h2>
@@ -252,41 +361,41 @@ function App() {
               <div className="use-case">
                 <div className="use-case-icon">🕸️</div>
                 <h4>Web of Trust</h4>
-                <p>Follow graphs, relay preferences, trust signals</p>
+                <p>Collect signals for NIP-85 trust assertions: follow graphs, endorsements, zaps</p>
               </div>
               <div className="use-case">
                 <div className="use-case-icon">📡</div>
                 <h4>Network Analysis</h4>
-                <p>Propagation, clustering, replication</p>
+                <p>Propagation, clustering, geographic distribution, replication</p>
               </div>
               <div className="use-case">
                 <div className="use-case-icon">🔬</div>
                 <h4>Protocol Research</h4>
-                <p>NIP adoption, kind distribution, tag patterns</p>
+                <p>NIP adoption, kind distribution, tag patterns at scale</p>
               </div>
               <div className="use-case">
                 <div className="use-case-icon">🧪</div>
                 <h4>Testbench</h4>
-                <p>Simulate failures, inject events, replay history</p>
+                <p>Simulate attacks, inject events, test algorithm resilience</p>
               </div>
               <div className="use-case">
                 <div className="use-case-icon">📁</div>
                 <h4>Archival</h4>
-                <p>Complete history, tamper-evident, queryable</p>
+                <p>Complete event history, content-addressed, queryable</p>
               </div>
               <div className="use-case">
                 <div className="use-case-icon">🛡️</div>
                 <h4>Trust Authority</h4>
-                <p>NIP-85 assertions, global trust rankings</p>
+                <p>Build trust scoring systems on collected social graph data</p>
               </div>
             </div>
           </div>
         )
-      case 8: // WoT
+      case 11: // WoT
         return (
           <div className="slide">
             <h2>Web of Trust Infrastructure</h2>
-            <h3>BigBrotr stores the signals, you define trust</h3>
+            <h3>BigBrotr collects the raw signals — you build trust on top</h3>
             <div className="grid-2 wot-section">
               <div>
                 <ul>
@@ -316,106 +425,61 @@ function App() {
             </div>
           </div>
         )
-      case 9: // Network Analysis
+      case 12: // Technology Stack
         return (
           <div className="slide">
-            <h2>Network Analysis</h2>
+            <h2>Technology Stack</h2>
             <div className="grid-2">
               <div className="box">
-                <h3>Event Propagation</h3>
-                <ul>
-                  <li>Track seen_at per relay</li>
-                  <li>Measure spread velocity</li>
-                  <li>Identify bottlenecks</li>
-                </ul>
+                <h3>Components</h3>
+                <div className="tech-list">
+                  <div className="tech-row"><span className="tech-label">Language</span><span className="tech-value">Python 3.11+</span></div>
+                  <div className="tech-row"><span className="tech-label">Database</span><span className="tech-value">PostgreSQL 16+</span></div>
+                  <div className="tech-row"><span className="tech-label">Async</span><span className="tech-value">asyncio + asyncpg</span></div>
+                  <div className="tech-row"><span className="tech-label">Config</span><span className="tech-value">Pydantic + YAML</span></div>
+                  <div className="tech-row"><span className="tech-label">Pooling</span><span className="tech-value">PgBouncer</span></div>
+                  <div className="tech-row"><span className="tech-label">Metrics</span><span className="tech-value">Prometheus</span></div>
+                  <div className="tech-row"><span className="tech-label">Monitoring</span><span className="tech-value">Grafana</span></div>
+                  <div className="tech-row"><span className="tech-label">Proxy</span><span className="tech-value">Tor, I2P, Lokinet</span></div>
+                </div>
               </div>
-              <div className="box">
-                <h3>Relay Clustering</h3>
-                <ul>
-                  <li>Co-occurrence analysis</li>
-                  <li>Content similarity</li>
-                  <li>Mirror detection</li>
-                </ul>
-              </div>
-              <div className="box">
-                <h3>Geographic Distribution</h3>
-                <ul>
-                  <li>NIP-66 geolocation</li>
-                  <li>Latency mapping</li>
-                  <li>Network topology</li>
-                </ul>
-              </div>
-              <div className="box">
-                <h3>Replication Factor</h3>
-                <ul>
-                  <li>Events per relay count</li>
-                  <li>Censorship risk scoring</li>
-                  <li>Distribution health</li>
-                </ul>
+              <div>
+                <h3>By the Numbers</h3>
+                <div className="stat-grid">
+                  <div className="stat"><div className="stat-number">6</div><div className="stat-label">Services</div></div>
+                  <div className="stat"><div className="stat-number">5</div><div className="stat-label">Packages</div></div>
+                  <div className="stat"><div className="stat-number">25</div><div className="stat-label">Stored Functions</div></div>
+                  <div className="stat"><div className="stat-number">11</div><div className="stat-label">Mat. Views</div></div>
+                  <div className="stat"><div className="stat-number">6</div><div className="stat-label">Tables</div></div>
+                  <div className="stat"><div className="stat-number">4</div><div className="stat-label">Networks</div></div>
+                  <div className="stat"><div className="stat-number">2400+</div><div className="stat-label">Tests</div></div>
+                  <div className="stat"><div className="stat-number">80%+</div><div className="stat-label">Coverage</div></div>
+                </div>
               </div>
             </div>
           </div>
         )
-      case 10: // Simulation & Attack Testing
-        return (
-          <div className="slide">
-            <h2>Network Simulation & Attack Testing</h2>
-            <h3>Real data, controlled experiments</h3>
-            <div className="attack-sim">
-              <div className="attack-scenario">
-                <h4>🔴 Sybil Attack Simulation</h4>
-                <div className="attack-visual">
-                  <div className="node-good">👤</div>
-                  <div className="node-good">👤</div>
-                  <div className="node-good">👤</div>
-                  <span className="attack-arrow">←</span>
-                  <div className="node-bad">🤖</div>
-                  <div className="node-bad">🤖</div>
-                  <div className="node-bad">🤖</div>
-                </div>
-                <ul style={{fontSize: '0.95rem'}}>
-                  <li>Inject fake social graph</li>
-                  <li>Test WoT algorithm resilience</li>
-                  <li>Measure global trust rank impact</li>
-                </ul>
-              </div>
-              <div className="attack-scenario">
-                <h4>🔴 Relay Infiltration</h4>
-                <div className="attack-visual">
-                  <div className="node-relay">R1</div>
-                  <div className="node-relay">R2</div>
-                  <div className="node-relay" style={{background: '#ff6b6b'}}>R3</div>
-                  <div className="node-relay">R4</div>
-                </div>
-                <ul style={{fontSize: '0.95rem'}}>
-                  <li>Malicious relay behavior</li>
-                  <li>Event censorship detection</li>
-                  <li>Replication vulnerability</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )
-      case 11: // Takeaways
+      case 13: // Key Takeaways
         return (
           <div className="slide">
             <h2>Key Takeaways</h2>
             <ul className="big-list">
-              <li>BigBrotr is <span className="highlight">infrastructure</span>, extensible to relay/API/DVM/Trust Authority</li>
-              <li><span className="highlight">Customizable</span> - define your implementation, fields, filters</li>
-              <li><span className="highlight">WoT-ready</span> - stores signals for NIP-85 trust assertions</li>
-              <li><span className="highlight">Attack simulation</span> - test algorithm resilience</li>
-              <li><span className="highlight">5 core services</span> - Seeder, Finder, Validator, Monitor, Synchronizer</li>
+              <li>BigBrotr is <span className="highlight">infrastructure</span>, extensible to relay / API / DVM / Trust Authority</li>
+              <li><span className="highlight">6 independent services</span> — Seeder, Finder, Validator, Monitor, Refresher, Synchronizer</li>
+              <li><span className="highlight">Database as integration point</span> — no message queues, no inter-service APIs</li>
+              <li><span className="highlight">Multi-network</span> — clearnet, Tor, I2P, Lokinet with per-network config</li>
+              <li><span className="highlight">Content-addressed</span> — SHA-256 deduplication eliminates consistency bugs</li>
+              <li><span className="highlight">Production-ready</span> — Prometheus metrics, Grafana dashboards, Docker deployments</li>
             </ul>
           </div>
         )
-      case 12: // Final
+      case 14: // Final
         return (
           <div className="slide center">
             <h1>BigBrotr</h1>
             <p className="subtitle">github.com/bigbrotr/bigbrotr</p>
             <div className="tags">
-              <span className="tag">Python 3.9+</span>
+              <span className="tag">Python 3.11+</span>
               <span className="tag">PostgreSQL 16+</span>
               <span className="tag">Docker Ready</span>
               <span className="tag">MIT License</span>

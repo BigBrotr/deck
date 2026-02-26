@@ -856,3 +856,159 @@ ul li::before {
 .legend-computed {
   background: #56ab2f;
 }
+
+/* DAG Descriptions */
+.dag-descriptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 25px;
+}
+
+.dag-item {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  padding: 6px 0;
+}
+
+.dag-name {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #667eea;
+  min-width: 80px;
+  font-size: 1rem;
+}
+
+.dag-desc {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* NIP-66 Grid */
+.nip66-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.nip66-test {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #0a0a0a;
+  border-radius: 8px;
+}
+
+.nip66-name {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #667eea;
+  min-width: 40px;
+}
+
+.nip66-desc {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.box-subtitle {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+.compact {
+  font-size: 1.1rem !important;
+  line-height: 1.8 !important;
+}
+
+/* Network Cards */
+.network-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.network-card {
+  text-align: center;
+  padding: 30px 20px;
+  border-radius: 16px;
+  border: 2px solid #333;
+  background: #1a1a1a;
+  transition: border-color 0.2s;
+}
+
+.network-card:hover {
+  border-color: #667eea;
+}
+
+.network-card.clearnet { border-color: #56ab2f; }
+.network-card.tor { border-color: #764ba2; }
+.network-card.i2p { border-color: #3b82f6; }
+.network-card.lokinet { border-color: #f97316; }
+
+.network-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.network-card code {
+  display: block;
+  font-family: 'Courier New', monospace;
+  color: #667eea;
+  font-size: 0.9rem;
+  margin: 10px 0;
+}
+
+.network-card p {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.network-note {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 30px;
+}
+
+/* Tech List */
+.tech-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tech-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #0a0a0a;
+}
+
+.tech-label {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.tech-value {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Service mode badge */
+.service-mode {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
