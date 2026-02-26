@@ -1,15 +1,30 @@
 {
-  "name": "bigbrotr-presentation",
-  "type": "module",
-  "version": "1.0.0",
+  "name": "presentation",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "slidev",
-    "build": "slidev build",
-    "export": "slidev export"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@slidev/cli": "^52.0.0",
-    "@slidev/theme-default": "latest"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.5.2",
+    "eslint": "^9.28.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.1.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.33.1",
+    "vite": "^6.3.5"
   }
 }
